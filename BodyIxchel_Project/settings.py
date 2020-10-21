@@ -9,6 +9,11 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
+#---- MySQL - para conectar a la BD
+import pymysql
+pymysql.install_as_MySQLdb()
+
+#---- MySQL - para conectar a la BD
 
 import os
 
@@ -30,6 +35,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+#Aqui se agregaron el ['rest_framework', 'BodyIxchel_API']
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
+    'BodyIxchel_API',
 ]
 
 MIDDLEWARE = [
@@ -73,10 +83,16 @@ WSGI_APPLICATION = 'BodyIxchel_Project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+#MySQL configuracion
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'body_ixchel',
+        'USER': 'root',
+        'PASSWORD': 'alex123',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
@@ -103,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-mx'
 
 TIME_ZONE = 'UTC'
 
