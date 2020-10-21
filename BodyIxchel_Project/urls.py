@@ -13,9 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+#----------Importaciones/Referencias-------------
+
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.authtoken import views
+from BodyIxchel_API.views import Login, Logout
+
+#------------------Codigo------------------------
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/',include(('BodyIxchel_API.urls','api'))),
+    path('api_generate_token/',views.obtain_auth_token),
+    path('login/',Login.as_view(), name='login'),
+    path('logout/',Logout.as_view(), name='logout'),
 ]
