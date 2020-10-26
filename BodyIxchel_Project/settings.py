@@ -110,14 +110,24 @@ WSGI_APPLICATION = 'BodyIxchel_Project.wsgi.application'
 
 #MySQL configuracion
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'body_ixchel',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+#         'PORT': '8080',
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
         'NAME': 'body_ixchel',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '8080',
+        'USER': 'dbmasteruser',
+        'PASSWORD': 'LmhfzehZ9d$h{7jGC.~O2%1JnX[}|uK8',
+        'HOST': 'ls-78118a96fed18418c47a6421b287318bdd8f9abf.cazpaviztita.us-east-2.rds.amazonaws.com',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
 
