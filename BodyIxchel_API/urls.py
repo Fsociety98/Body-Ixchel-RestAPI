@@ -1,10 +1,14 @@
-#----------Importaciones/Referencias-------------
+from django.urls import include, path
 
-from django.urls import path
-from .views import UsuarioList
+# Django REST Framework
+from rest_framework.routers import DefaultRouter
 
-#------------------Codigo------------------------
+# Views
+from BodyIxchel_API import views
+
+router = DefaultRouter()
+router.register(r'usuario', views.UsuarioViewSet, basename='usuario')
 
 urlpatterns = [
-    path('usuario/', UsuarioList.as_view(), name='usuario_list'),
+    path('', include(router.urls))
 ]

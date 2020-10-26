@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+"""
 #----------Importaciones/Referencias-------------
 
 from django.contrib import admin
@@ -29,4 +30,17 @@ urlpatterns = [
     path('api_generate_token/',views.obtain_auth_token),
     path('login/',Login.as_view(), name='login'),
     path('logout/',Logout.as_view(), name='logout'),
+]
+"""
+from django.conf import settings
+from django.urls import include, path
+from django.conf.urls.static import static
+from django.contrib import admin
+
+urlpatterns = [
+    # Django Admin
+    path('admin/', admin.site.urls),
+
+    path('', include(('BodyIxchel_API.urls', 'usuario'), namespace='usuario')),
+
 ]
