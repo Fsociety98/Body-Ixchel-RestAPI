@@ -28,7 +28,6 @@ class UsuarioList(generics.ListCreateAPIView):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
     permission_classes = (IsAuthenticated, )
-    authentication_class = (TokenAuthentication, )
 
 class Login(FormView):
     template_name = "login.html"

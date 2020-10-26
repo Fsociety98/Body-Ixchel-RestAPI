@@ -18,8 +18,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'fechaNacimiento',
             'email',
             'password',
-            'activo',
-            'tipoUsuario',
+            'is_active',
+            'is_staff',
         )
 
 

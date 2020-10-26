@@ -61,6 +61,11 @@ REST_FRAMEWORK = {
     ),
 }
 """
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,6 +133,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#-------------
+AUTH_USER_MODEL = 'BodyIxchel_API.Usuario'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
