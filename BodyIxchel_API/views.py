@@ -20,7 +20,11 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     queryset = Usuario.objects.filter(is_active=True)
     serializer_class = UsuarioSerializer
 
-    # Detail define si es una petición de detalle o no, en methods añadimos el método permitido, en nuestro caso solo vamos a permitir post
+    # Detail define si es una petición de detalle o no, en methods añadimos el método permitido, en nuestro caso solo vamos a permitir post.
+
+    #/api/authentication/login/
+    #BODY: {"email": "", "password": ""}
+
     @action(detail=False, methods=['post'])
     def login(self, request):
         """User sign in."""
@@ -33,6 +37,10 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
         }
         return Response(data, status=status.HTTP_201_CREATED)
     
+    #/api/authentication/create_account/
+    #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",
+    #"email": "", "password": "", "password_confirmation" : "", "is_active": false, "is_staff": false }
+
     @action(detail=False, methods=['post'])
     def create_account(self, request):
         serializer = UsuarioRegistroSerializer(data=request.data)
@@ -42,6 +50,9 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
         data = UsuarioSerializer(usuario).data
         return Response(data, status=status.HTTP_201_CREATED)
 
+    #/api/authentication/logout/
+    #HEADERS: [KEY : Authorization, VALUE : Token {token}]
+
     @action(detail=False, methods=['get'])
     def logout(self, request, format=None):
         queryset = self.get_queryset()
@@ -50,6 +61,8 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
 
 
 #------------ Authentication ---------------
+
+#-- APARTIR DE AQUI TODOS :: HEADERS: [KEY : Authorization, VALUE : Token {token}]
 
 #------------ Usuario ---------------
 
@@ -75,8 +88,9 @@ def getUser(request, user_id):
     else :
         return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
-
-
+#@api_view(["PUT"])
+#@permission_classes([IsAuthenticated])
+#def updateUser(request, user_id):
 
 
 
