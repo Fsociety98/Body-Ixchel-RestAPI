@@ -22,6 +22,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             'is_active',
             'is_staff',
         )
+    
 
 class UsuarioLoginSerializer(serializers.Serializer):
 
@@ -79,3 +80,34 @@ class UsuarioRegistroSerializer(serializers.Serializer):
         usuario = Usuario.objects.create_user(**data)
 
         return usuario
+    """
+    def update(self, instance, validate_data):
+        instance.nombre = validate_data.get('nombre', instance.nombre)
+        instance.apellidoPaterno = validate_data.get('apellidoPaterno', instance.apellidoPaterno)
+        instance.apellidoMaterno = validate_data.get('apellidoMaterno', instance.apellidoMaterno)
+        instance.fechaNacimiento = validate_data.get('fechaNacimiento', instance.fechaNacimiento)
+        instance.email = validate_data.get('email', instance.email)
+        return instance
+    """
+
+class UsuarioModificarDatosSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Usuario
+        fields = (
+            'usuarioId',
+            'nombre',
+            'apellidoPaterno',
+            'apellidoMaterno',
+            'fechaNacimiento',
+            'email',
+        )
+
+class UsuarioInactivoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Usuario
+        fields = (
+            'usuarioId',
+            'is_active',
+        )
