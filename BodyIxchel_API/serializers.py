@@ -111,3 +111,18 @@ class UsuarioInactivoSerializer(serializers.ModelSerializer):
             'usuarioId',
             'is_active',
         )
+
+class UsuarioCambioPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password_old = serializers.CharField(min_length=4, max_length=64)
+    new_password = serializers.CharField(min_length=4, max_length=64)
+    new_password_confirmation = serializers.CharField(min_length=8, max_length=64)
+
+def validate(self, data):
+        # authenticate recibe las credenciales, si son válidas devuelve el objeto del usuario
+        usuario = authenticate(username=data['email'], password=data['password_old'])
+
+        if not usuario:
+            raise serializers.ValidationError('Las credenciales no son válidas')
+
+        return True
