@@ -1,20 +1,32 @@
 # Django REST Framework
 from rest_framework import status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes, api_view
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from rest_framework import generics
+from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+#import io
+#from rest_framework.parsers import JSONParser
 # Serializers
-from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer
+from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer
 
 # Models
 from BodyIxchel_API.models import Usuario
 
-class UsuarioViewSet(viewsets.GenericViewSet):
+#------------ Authentication ---------------
+
+class AuthenticationViewSet(viewsets.GenericViewSet):
 
     queryset = Usuario.objects.filter(is_active=True)
     serializer_class = UsuarioSerializer
 
-    # Detail define si es una petición de detalle o no, en methods añadimos el método permitido, en nuestro caso solo vamos a permitir post
+    # Detail define si es una petición de detalle o no, en methods añadimos el método permitido, en nuestro caso solo vamos a permitir post.
+
+    #/api/authentication/login/
+    #BODY: {"email": "", "password": ""}
+
     @action(detail=False, methods=['post'])
     def login(self, request):
         """User sign in."""
@@ -27,8 +39,12 @@ class UsuarioViewSet(viewsets.GenericViewSet):
         }
         return Response(data, status=status.HTTP_201_CREATED)
     
+    #/api/authentication/create_account/
+    #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",
+    #"email": "", "password": "", "password_confirmation" : "" }
+
     @action(detail=False, methods=['post'])
-    def registro(self, request):
+    def create_account(self, request):
         serializer = UsuarioRegistroSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -36,12 +52,84 @@ class UsuarioViewSet(viewsets.GenericViewSet):
         data = UsuarioSerializer(usuario).data
         return Response(data, status=status.HTTP_201_CREATED)
 
-    """
+    #/api/authentication/logout/
+    #HEADERS: [KEY : Authorization, VALUE : Token {token}]
+
     @action(detail=False, methods=['get'])
-    def lista(self, request):
-        queryset = Usuario.objects.filter(is_active=True)
-        serializer = UsuarioSerializer
-        usuarios = serializer.save()
-        data = UsuarioSerializer(usuarios).data
-        return Response(data)
-    """
+    def logout(self, request, format=None):
+        queryset = self.get_queryset()
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+#------------ Authentication ---------------
+
+#-- APARTIR DE AQUI TODOS :: HEADERS: [KEY : Authorization, VALUE : Token {token}]
+
+#------------ Usuario ---------------
+
+#/api/users/all
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])  
+def getUsers(request):
+    queryset = Usuario.objects.filter(is_active=True)
+    serializer = UsuarioSerializer(queryset, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+#/api/users/detail/{user_id}
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getUser(request, user_id):
+
+    queryset = Usuario.objects.filter(is_active=True, usuarioId=user_id)
+    validator = queryset.exists()
+
+    if validator == True :
+        serializer = UsuarioSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else :
+        return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+#/api/users/update/{user_id}
+#BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",
+#"email": "" }
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def updateUser(request, user_id, format=None):
+
+    try:
+        print(request.data)
+        queryset = Usuario.objects.get(usuarioId=user_id)
+        serializer = UsuarioModificarDatosSerializer(queryset, data= request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except ObjectDoesNotExist:
+        return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+ #/api/users/delete/{user_id}
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def deleteUser(request, user_id, format=None):
+
+    try:
+        
+        queryset = Usuario.objects.get(usuarioId=user_id)
+        serializer = UsuarioInactivoSerializer(queryset, data= {"is_active": "false"})
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except ObjectDoesNotExist:
+        return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+#------------ Usuario ---------------

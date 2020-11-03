@@ -41,6 +41,6 @@ urlpatterns = [
     # Django Admin
     path('admin/', admin.site.urls),
 
-    path('', include(('BodyIxchel_API.urls', 'usuario'), namespace='usuario')),
+    path('api/', include(('BodyIxchel_API.urls', 'api'), namespace='api')),
 
 ]
