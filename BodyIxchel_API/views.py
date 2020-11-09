@@ -54,11 +54,13 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=['post'])
     def create_account(self, request):
         serializer = UsuarioRegistroSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        usuario = serializer.save()
-        data = UsuarioSerializer(usuario).data
-        return Response(data, status=status.HTTP_201_CREATED)
+        #if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
+            usuario = serializer.save()
+            data = UsuarioSerializer(usuario).data
+            return Response(data, status=status.HTTP_201_CREATED)
+        else :
+            return ErrorMessage(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
     #/api/authentication/logout/
     #HEADERS: [KEY : Authorization, VALUE : Token {token}]
