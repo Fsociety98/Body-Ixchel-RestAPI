@@ -15,6 +15,14 @@ from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer
 # Models
 from BodyIxchel_API.models import Usuario
 
+#------------ Errors Headler ---------------
+
+def ErrorMessage(message, statusCode):
+    return Response({'statusCode': statusCode, 'message' : message}, status=statusCode)
+
+#------------ Errors Headler ---------------
+
+
 #------------ Authentication ---------------
 
 class AuthenticationViewSet(viewsets.GenericViewSet):
@@ -88,7 +96,9 @@ def getUser(request, user_id):
         serializer = UsuarioSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else :
-        return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        #return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        return ErrorMessage('Usuario no encontrado.', status.HTTP_404_NOT_FOUND)
+  
 
 #/api/users/update/{user_id}
 #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",

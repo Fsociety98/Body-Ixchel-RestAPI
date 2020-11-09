@@ -62,7 +62,7 @@ class UsuarioRegistroSerializer(serializers.Serializer):
     )
 
     password = serializers.CharField(min_length=4, max_length=64)
-    password_confirmation = serializers.CharField(min_length=8, max_length=64)
+    password_confirmation = serializers.CharField(min_length=4, max_length=64)
 
     def validate(self, data):
         passwd = data['password']
