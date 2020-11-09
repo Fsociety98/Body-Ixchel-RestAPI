@@ -37,6 +37,14 @@ class UsuarioLoginSerializer(serializers.Serializer):
         usuario = authenticate(username=data['email'], password=data['password'])
 
         if not usuario:
+            
+            """
+            data = {
+                'errors': 'Las credenciales no son válidas'
+            }
+            raise serializers.ValidationError(data)
+            """
+            
             raise serializers.ValidationError('Las credenciales no son válidas')
 
         # Guardamos el usuario en el contexto para posteriormente en create recuperar el token
@@ -52,7 +60,7 @@ class UsuarioLoginSerializer(serializers.Serializer):
 
 class UsuarioRegistroSerializer(serializers.Serializer):
 
-    nombre = serializers.CharField(min_length=2, max_length=250)
+    nombre = serializers.CharField(min_length=2, max_length=250, error_messages={'blank':'El campo Nombre no puede estar vacío.'})
     apellidoPaterno = serializers.CharField(min_length=2, max_length=250)
     apellidoMaterno = serializers.CharField(min_length=2, max_length=250)
     fechaNacimiento = serializers.DateField()
@@ -65,14 +73,20 @@ class UsuarioRegistroSerializer(serializers.Serializer):
     password_confirmation = serializers.CharField(min_length=4, max_length=64)
 
     def validate(self, data):
+
+        #errors_list = []
+
         passwd = data['password']
         passwd_conf = data['password_confirmation']
 
         if passwd != passwd_conf:
-            raise serializers.ValidationError("Las contraseñas no coinciden")
+            data = {
+                'errors': 'Las contraseñas no coinciden'
+            }
+            raise serializers.ValidationError(data)
 
         password_validation.validate_password(passwd)
-
+        
         return data
 
     def create(self, data):

@@ -65,6 +65,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
     ],
+    'EXCEPTION_HANDLER': 'utils.exceptionhandler.custom_exception_handler',
 }
 
 MIDDLEWARE = [

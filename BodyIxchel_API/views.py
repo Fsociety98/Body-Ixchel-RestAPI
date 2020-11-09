@@ -39,13 +39,18 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     def login(self, request):
         """User sign in."""
         serializer = UsuarioLoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        usuario, token = serializer.save()
-        data = {
-            'usuario': UsuarioSerializer(usuario).data,
-            'access_token': token
-        }
-        return Response(data, status=status.HTTP_201_CREATED)
+        #if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
+
+            usuario, token = serializer.save()
+            data = {
+                'usuario': UsuarioSerializer(usuario).data,
+                'access_token': token
+            }
+            return Response(data, status=status.HTTP_201_CREATED)
+        else :
+            return ErrorMessage(serializer.errors.values(), status.HTTP_400_BAD_REQUEST)
+
     
     #/api/authentication/create_account/
     #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",
@@ -60,7 +65,8 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
             data = UsuarioSerializer(usuario).data
             return Response(data, status=status.HTTP_201_CREATED)
         else :
-            return ErrorMessage(serializer.errors, status.HTTP_400_BAD_REQUEST)
+            print(serializer.errors)
+            return ErrorMessage(serializer.errors.values(), status.HTTP_400_BAD_REQUEST)
 
     #/api/authentication/logout/
     #HEADERS: [KEY : Authorization, VALUE : Token {token}]
