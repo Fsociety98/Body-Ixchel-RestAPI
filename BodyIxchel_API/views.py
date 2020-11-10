@@ -74,7 +74,6 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
             data = UsuarioSerializer(usuario).data
             return Response(data, status=status.HTTP_201_CREATED)
         else :
-            print(serializer.errors.values())
             return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
     #/api/authentication/logout/
