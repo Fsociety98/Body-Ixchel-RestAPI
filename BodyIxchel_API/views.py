@@ -15,6 +15,23 @@ from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer
 # Models
 from BodyIxchel_API.models import Usuario
 
+#------------ Errors Headler ---------------
+
+def ErrorMessage(message, statusCode):
+    return Response({'statusCode': statusCode, 'message' : message}, status=statusCode)
+
+def ErrorArrayToString(errorArray):
+
+    _listErrors = []
+
+    for error in errorArray:
+        _listErrors.append(str(error[0]))
+
+    return _listErrors
+
+#------------ Errors Headler ---------------
+
+
 #------------ Authentication ---------------
 
 class AuthenticationViewSet(viewsets.GenericViewSet):
@@ -31,13 +48,18 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     def login(self, request):
         """User sign in."""
         serializer = UsuarioLoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        usuario, token = serializer.save()
-        data = {
-            'usuario': UsuarioSerializer(usuario).data,
-            'access_token': token
-        }
-        return Response(data, status=status.HTTP_201_CREATED)
+        #if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
+
+            usuario, token = serializer.save()
+            data = {
+                'usuario': UsuarioSerializer(usuario).data,
+                'access_token': token
+            }
+            return Response(data, status=status.HTTP_201_CREATED)
+        else :
+            return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
+
     
     #/api/authentication/create_account/
     #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",
@@ -46,11 +68,13 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=['post'])
     def create_account(self, request):
         serializer = UsuarioRegistroSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        usuario = serializer.save()
-        data = UsuarioSerializer(usuario).data
-        return Response(data, status=status.HTTP_201_CREATED)
+        #if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
+            usuario = serializer.save()
+            data = UsuarioSerializer(usuario).data
+            return Response(data, status=status.HTTP_201_CREATED)
+        else :
+            return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
     #/api/authentication/logout/
     #HEADERS: [KEY : Authorization, VALUE : Token {token}]
@@ -88,7 +112,9 @@ def getUser(request, user_id):
         serializer = UsuarioSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     else :
-        return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        #return Response({'error': 'Usuario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        return ErrorMessage('Usuario no encontrado.', status.HTTP_404_NOT_FOUND)
+  
 
 #/api/users/update/{user_id}
 #BODY : {"nombre": "", "apellidoPaterno": "", "apellidoMaterno": "", "fechaNacimiento": "YYYY-MM-DD",

@@ -27,8 +27,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class UsuarioLoginSerializer(serializers.Serializer):
 
     #Campos a requerir.
-    email = serializers.EmailField()
-    password = serializers.CharField(min_length=4, max_length=64)
+    email = serializers.EmailField(error_messages={'blank':'El campo Correo Electrónico no puede estar vacío.'})
+    password = serializers.CharField(min_length=4, max_length=64, error_messages={'blank':'El campo Contraseña no puede estar vacío.'})
 
     #Validcion de datos.
 
@@ -36,8 +36,8 @@ class UsuarioLoginSerializer(serializers.Serializer):
         # authenticate recibe las credenciales, si son válidas devuelve el objeto del usuario
         usuario = authenticate(username=data['email'], password=data['password'])
 
-        if not usuario:
-            raise serializers.ValidationError('Las credenciales no son válidas')
+        if not usuario:         
+            raise serializers.ValidationError('Las credenciales no son válidas. Por favor, verifique el Correo Electrónico y/o la Contraseña.')
 
         # Guardamos el usuario en el contexto para posteriormente en create recuperar el token
 
@@ -52,27 +52,29 @@ class UsuarioLoginSerializer(serializers.Serializer):
 
 class UsuarioRegistroSerializer(serializers.Serializer):
 
-    nombre = serializers.CharField(min_length=2, max_length=250)
-    apellidoPaterno = serializers.CharField(min_length=2, max_length=250)
-    apellidoMaterno = serializers.CharField(min_length=2, max_length=250)
+    nombre = serializers.CharField(min_length=2, max_length=250, error_messages={'blank':'El campo Nombre no puede estar vacío.'})
+    apellidoPaterno = serializers.CharField(min_length=2, max_length=250, error_messages={'blank':'El campo Apellido Paterno no puede estar vacío.'})
+    apellidoMaterno = serializers.CharField(min_length=2, max_length=250, error_messages={'blank':'El campo Apellido Materno no puede estar vacío.'})
     fechaNacimiento = serializers.DateField()
 
     email = serializers.EmailField(
-        validators=[UniqueValidator(queryset=Usuario.objects.all())]
+        validators=[UniqueValidator(queryset=Usuario.objects.all(),message='Este Correo Electrónico ya se encuentra registrado. Por favor, Ingrese otro.')],
+        error_messages={'blank':'El campo Correo Electrónico no puede estar vacío.'}
     )
 
-    password = serializers.CharField(min_length=4, max_length=64)
-    password_confirmation = serializers.CharField(min_length=8, max_length=64)
+    password = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Contraseña no puede estar vacío.','min_length':'La Contraseña es muy corta, asegúrese que tenga al menos 8 caracteres.'})
+    password_confirmation = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Confirmar Contraseña no puede estar vacío.', 'min_length':'Asegúrese el campo Confirmar Contraseña tenga al menos 8 caracteres.'})
 
     def validate(self, data):
+
         passwd = data['password']
         passwd_conf = data['password_confirmation']
 
         if passwd != passwd_conf:
-            raise serializers.ValidationError("Las contraseñas no coinciden")
+            raise serializers.ValidationError('Por favor, verifique las contraseñas. No coinciden.')
 
         password_validation.validate_password(passwd)
-
+        
         return data
 
     def create(self, data):

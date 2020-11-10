@@ -72,6 +72,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',  # <-- And here
     ],
+    'EXCEPTION_HANDLER': 'utils.exceptionhandler.custom_exception_handler',
 }
 
 MIDDLEWARE = [
@@ -110,16 +111,6 @@ WSGI_APPLICATION = 'BodyIxchel_Project.wsgi.application'
 
 #MySQL configuracion
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'body_ixchel',
-#         'USER': 'root',
-#         'PASSWORD': 'root',
-#         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-#         'PORT': '8080',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
