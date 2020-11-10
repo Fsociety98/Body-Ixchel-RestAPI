@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 #---- MySQL - para conectar a la BD
 import pymysql
+pymysql.version_info = (1, 4, 0, "final", 0)
 pymysql.install_as_MySQLdb()
 
 #---- MySQL - para conectar a la BD
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -50,6 +52,11 @@ INSTALLED_APPS = [
     'BodyIxchel_API',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}
 #---------- REST API -----------------
 """
 REST_FRAMEWORK = {
@@ -104,19 +111,6 @@ WSGI_APPLICATION = 'BodyIxchel_Project.wsgi.application'
 
 #MySQL configuracion
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'body_ixchel',
-        'USER': 'root',
-        'PASSWORD': 'alex123',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    } 
-}
-"""
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
@@ -168,3 +162,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+django_heroku.settings(locals())
