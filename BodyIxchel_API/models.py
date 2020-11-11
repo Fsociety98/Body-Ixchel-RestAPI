@@ -67,3 +67,18 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return '{0} {1}'.format(self.nombre, self.apellidoPaterno)
 
 # -----------------------Usuario--------------------------------
+
+# -----------------------Recuperar Contraseña--------------------------------
+
+class RecoverPasswordLog(models.Model):
+    recoverPasswordLogId = models.AutoField(primary_key=True)
+    codigo = models.CharField('Codigo', max_length=250)
+    fechaSolicitud = models.DateField('FechaSolicitud')
+    validado = models.BooleanField('Validado',default=False)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.codigo)
+
+
+# -----------------------Recuperar Contraseña--------------------------------

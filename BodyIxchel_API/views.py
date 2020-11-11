@@ -8,12 +8,16 @@ from rest_framework import generics
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
 #import io
-#from rest_framework.parsers import JSONParser
+from rest_framework.parsers import JSONParser
 # Serializers
-from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer
+from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer
 
 # Models
-from BodyIxchel_API.models import Usuario
+from BodyIxchel_API.models import Usuario, RecoverPasswordLog
+
+#---- Email
+from BodyIxchel_API.email import SecretCode, getAlternativeText, getHTMLBase, EmailHandled
+from datetime import date
 
 #------------ Errors Headler ---------------
 
@@ -88,6 +92,40 @@ class AuthenticationViewSet(viewsets.GenericViewSet):
 
 #------------ Authentication ---------------
 
+# --------Recuperar Contraseña-------
+
+#/api/recover-password
+#BODY : {"email": ""}
+
+@api_view(["POST"])
+def recoverPassword(request):
+    queryset = Usuario.objects.filter(email=request.data['email'])
+
+    validator = queryset.exists()
+
+    if validator == True :
+        oSecretCode = SecretCode()
+        oSecretCode.generate()
+
+        today = date.today()
+
+        usuario_serializer = UsuarioSerializer(queryset, many=True)
+        recoverPasswordLog_serializer = RecoverPasswordLogSerializer(data= {"codigo": str(oSecretCode.getAllCadena()), "fechaSolicitud": today, "usuario": usuario_serializer.data[0]['usuarioId']})
+
+        if recoverPasswordLog_serializer.is_valid():
+            
+            oEmailHandled = EmailHandled("soporte.bodyixchel@gmail.com", str(usuario_serializer.data[0]['email']), "Ixchel123@", "Recuperar Contraseña", getHTMLBase(oSecretCode.getNumber1(), oSecretCode.getNumber2(), oSecretCode.getNumber3(), oSecretCode.getNumber4()), getAlternativeText(str(oSecretCode.getAllCadena())))
+            oEmailHandled.sendHTMLEmail()
+
+            recoverPasswordLog = recoverPasswordLog_serializer.save()
+            data = RecoverPasswordLogSerializer(recoverPasswordLog).data
+            return Response(data, status=status.HTTP_200_OK)
+        else :
+            print(recoverPasswordLog_serializer.errors.values())
+            return ErrorMessage(ErrorArrayToString(recoverPasswordLog_serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
+    else :
+        return ErrorMessage('Usuario no encontrado.', status.HTTP_404_NOT_FOUND)
+
 #-- APARTIR DE AQUI TODOS :: HEADERS: [KEY : Authorization, VALUE : Token {token}]
 
 #------------ Usuario ---------------
@@ -159,3 +197,4 @@ def deleteUser(request, user_id, format=None):
 
 
 #------------ Usuario ---------------
+
