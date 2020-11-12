@@ -162,19 +162,8 @@ def changePassword(request):
 
             return ErrorMessage(ErrorArrayToString(newPassword_serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
-
-        
-
-        #print(usuario_serializer.data)
-
-        return Response('')
     else:
         return ErrorMessage('Solicitud expirada, por favor, intente de nuevo.', status.HTTP_404_NOT_FOUND)
-
-    #print(queryset)
-    #return Response('')
-
-
 
 #-- APARTIR DE AQUI TODOS :: HEADERS: [KEY : Authorization, VALUE : Token {token}]
 
