@@ -126,6 +126,28 @@ def recoverPassword(request):
         return ErrorMessage('Usuario no registrado y/o inactivo.', status.HTTP_404_NOT_FOUND)
 
 
+#/api/check-password
+#BODY : {"code": "" }
+
+@api_view(["POST"])
+def checkCode(request):
+    
+    today = date.today()
+    queryset = RecoverPasswordLog.objects.filter(codigo=request.data['code'], fechaSolicitud = today, validado = False)
+
+    validator = queryset.exists()
+
+    if validator == True :
+
+        return ErrorMessage('Validado', status.HTTP_200_OK)
+    else:
+        return ErrorMessage('Solicitud expirada, por favor, intente de nuevo.', status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
 #/api/change-password
 #BODY : {"code": "", "password": "", "password_confirmation" : "" }
 
