@@ -127,7 +127,7 @@ def recoverPassword(request):
 
 
 #/api/change-password
-#BODY : {"new": ""}
+#BODY : {"code": "", "password": "", "password_confirmation" : "" }
 
 @api_view(["POST"])
 def changePassword(request):
