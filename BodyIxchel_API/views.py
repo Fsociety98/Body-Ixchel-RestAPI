@@ -10,11 +10,10 @@ from django.core.exceptions import ObjectDoesNotExist
 #import io
 from rest_framework.parsers import JSONParser
 # Serializers
-from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer
+from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer, NewPasswordSerializer, RecoverPasswordLogUpdateSerializer
 
 # Models
 from BodyIxchel_API.models import Usuario, RecoverPasswordLog
-
 #---- Email
 from BodyIxchel_API.email import SecretCode, getAlternativeText, getHTMLBase, EmailHandled
 from datetime import date
@@ -121,10 +120,61 @@ def recoverPassword(request):
             data = RecoverPasswordLogSerializer(recoverPasswordLog).data
             return Response(data, status=status.HTTP_200_OK)
         else :
-            print(recoverPasswordLog_serializer.errors.values())
+            #print(recoverPasswordLog_serializer.errors.values())
             return ErrorMessage(ErrorArrayToString(recoverPasswordLog_serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
     else :
-        return ErrorMessage('Usuario no encontrado.', status.HTTP_404_NOT_FOUND)
+        return ErrorMessage('Usuario no registrado y/o inactivo.', status.HTTP_404_NOT_FOUND)
+
+
+#/api/change-password
+#BODY : {"new": ""}
+
+@api_view(["POST"])
+def changePassword(request):
+    today = date.today()
+    queryset = RecoverPasswordLog.objects.filter(codigo=request.data['code'], fechaSolicitud = today, validado = False)
+
+    validator = queryset.exists()
+
+    if validator == True :
+        recoverPasswordLog_serializer = RecoverPasswordLogSerializer(queryset, many=True)
+        querysetUsuario = Usuario.objects.filter(is_active=True, usuarioId=recoverPasswordLog_serializer.data[0]['usuario'])
+        usuario_serializer = UsuarioSerializer(querysetUsuario, many=True)
+
+        newPassword_serializer = NewPasswordSerializer(data={'password': request.data['password'], 'password_confirmation' : request.data['password_confirmation']})
+        
+        if newPassword_serializer.is_valid():
+            u = Usuario.objects.get( usuarioId=recoverPasswordLog_serializer.data[0]['usuario'])
+            u.set_password(request.data['password'])
+            u.save()
+
+            q = RecoverPasswordLog.objects.get(recoverPasswordLogId=recoverPasswordLog_serializer.data[0]['recoverPasswordLogId'])
+            recoverPasswordLogUpdate_serializer = RecoverPasswordLogUpdateSerializer(q, data={'validado': 'True'})
+
+            if recoverPasswordLogUpdate_serializer.is_valid():
+                recoverPasswordLogUpdate_serializer.save()
+
+                return ErrorMessage('Contraseña actualizada con éxito.', status.HTTP_201_CREATED)
+            else:
+                return ErrorMessage(ErrorArrayToString(recoverPasswordLogUpdate_serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
+
+        else :
+
+            return ErrorMessage(ErrorArrayToString(newPassword_serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
+
+
+        
+
+        #print(usuario_serializer.data)
+
+        return Response('')
+    else:
+        return ErrorMessage('Solicitud expirada, por favor, intente de nuevo.', status.HTTP_404_NOT_FOUND)
+
+    #print(queryset)
+    #return Response('')
+
+
 
 #-- APARTIR DE AQUI TODOS :: HEADERS: [KEY : Authorization, VALUE : Token {token}]
 

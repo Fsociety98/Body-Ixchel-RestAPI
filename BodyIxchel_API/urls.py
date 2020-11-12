@@ -19,4 +19,5 @@ urlpatterns = [
    path(r'users/update/<int:user_id>', views.updateUser, name='user_update'),
    path(r'users/delete/<int:user_id>', views.deleteUser, name='user_delete'),
    path(r'recover-password', views.recoverPassword, name='recover_password'),
+   path(r'change-password', views.changePassword, name='change_password'),
 ]

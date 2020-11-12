@@ -132,7 +132,17 @@ class RecoverPasswordLogSerializer(serializers.ModelSerializer):
             'usuario',
         )
 
-class NewPasswordSerializer(serializers.ModelSerializer):
+class RecoverPasswordLogUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RecoverPasswordLog
+        fields = (
+            'validado',
+            'usuario_id',
+        )
+
+
+class NewPasswordSerializer(serializers.Serializer):
 
     password = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Contraseña no puede estar vacío.','min_length':'La Contraseña es muy corta, asegúrese que tenga al menos 8 caracteres.'})
     password_confirmation = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Confirmar Contraseña no puede estar vacío.', 'min_length':'Asegúrese el campo Confirmar Contraseña tenga al menos 8 caracteres.'})
