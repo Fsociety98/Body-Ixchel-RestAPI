@@ -259,5 +259,20 @@ def deleteUser(request, user_id, format=None):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def analyzeMastografia(request):
-    print(request.data)
-    return Response('')
+    today = date.today()
+
+    serializer = MastografiaSerializer(data={'imagen': request.FILES['mastografia'], 'fechaEscaneo': today, 'usuario': request.data['usuarioId']})
+
+    if serializer.is_valid():
+        mastografia = serializer.save()
+        data = MastografiaSerializer(mastografia).data
+        print(data['mastografiaId'])
+
+
+
+
+        #DESPUES DE VALIDAR LA IA 
+        return Response(data, status=status.HTTP_201_CREATED)
+    else :
+        return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
+
