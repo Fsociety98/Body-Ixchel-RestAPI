@@ -2,7 +2,7 @@
 from django.contrib.auth import password_validation, authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import Usuario, RecoverPasswordLog
+from .models import Usuario, RecoverPasswordLog, Mastografia
 from rest_framework.validators import UniqueValidator
 #------------------Codigo------------------------
 
@@ -158,3 +158,13 @@ class NewPasswordSerializer(serializers.Serializer):
         password_validation.validate_password(passwd)
             
         return data['password']
+
+# -----------------------Recuperar Contraseña--------------------------------
+
+# -----------------------Mastografia--------------------------------
+
+class MastografiaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mastografia
+        fields = '__all__'

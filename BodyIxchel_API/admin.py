@@ -5,6 +5,7 @@ from django.contrib import admin
 #from .models import TipoUsuario
 from .models import Usuario
 from .models import RecoverPasswordLog
+from .models import Mastografia
 #------------------Codigo------------------------
 
 # Register your models here.
@@ -12,3 +13,4 @@ from .models import RecoverPasswordLog
 #admin.site.register(TipoUsuario)
 admin.site.register(Usuario)
 admin.site.register(RecoverPasswordLog)
+admin.site.register(Mastografia)

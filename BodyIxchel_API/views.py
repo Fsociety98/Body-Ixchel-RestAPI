@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 #import io
 from rest_framework.parsers import JSONParser
 # Serializers
-from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer, NewPasswordSerializer, RecoverPasswordLogUpdateSerializer
+from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer, NewPasswordSerializer, RecoverPasswordLogUpdateSerializer, MastografiaSerializer
 
 # Models
 from BodyIxchel_API.models import Usuario, RecoverPasswordLog
@@ -143,11 +143,6 @@ def checkCode(request):
     else:
         return ErrorMessage('Solicitud expirada, por favor, intente de nuevo.', status.HTTP_404_NOT_FOUND)
 
-
-
-
-
-
 #/api/change-password
 #BODY : {"code": "", "password": "", "password_confirmation" : "" }
 
@@ -259,3 +254,10 @@ def deleteUser(request, user_id, format=None):
 
 #------------ Usuario ---------------
 
+# -----------Mastografia---------------
+#/api/mastografias/analyze
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def analyzeMastografia(request):
+    print(request.data)
+    return Response('')
