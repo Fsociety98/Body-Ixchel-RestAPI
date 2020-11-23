@@ -22,6 +22,7 @@ from datetime import date
 from BodyIxchel_API.MastografiaAnomaliaDetector import MastografiaAnomaliaDetector
 import os
 from PIL import Image
+import base64
 
 #------------ Errors Headler ---------------
 
@@ -303,3 +304,30 @@ def analyzeMastografia(request):
     else :
         return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
+
+#/api/mastografias/result/{mastografia_id}
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getMastografia(request, mastografia_id):
+
+    queryset = Mastografia.objects.filter(check=True, mastografiaId=mastografia_id)
+
+    validator = queryset.exists()
+
+    if validator == True :
+        serializer = MastografiaSerializer(queryset, many=True)
+
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+        RUTA_IMG_RESULTADO ='{0}/{1}'.format(MEDIA_ROOT, serializer.data[0]['rutaImagenResultado'])
+
+        STR_IMG_BASE_64 = ""
+
+        with open(RUTA_IMG_RESULTADO, "rb") as imageFile:
+            STR_IMG_BASE_64 = base64.b64encode(imageFile.read())
+
+        return Response(STR_IMG_BASE_64, status=status.HTTP_200_OK)
+    else :
+
+        return ErrorMessage('Mastografia no encontrada.', status.HTTP_404_NOT_FOUND)

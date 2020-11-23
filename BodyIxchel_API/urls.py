@@ -22,4 +22,5 @@ urlpatterns = [
    path(r'change-password', views.changePassword, name='change_password'),
    path(r'check-password', views.checkCode, name='check_password'),
    path(r'mastografias/analyze', views.analyzeMastografia, name='mastografia_analyze'),
+   path(r'mastografias/result/<int:mastografia_id>', views.getMastografia, name='mastografia_get_result'),
 ]
