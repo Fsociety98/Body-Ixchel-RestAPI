@@ -168,3 +168,14 @@ class MastografiaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mastografia
         fields = '__all__'
+
+class MastografiaUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mastografia
+        fields = (
+            'rutaImagenResultado',
+            'anomaliasEncontradas',
+            'check',
+            'usuario_id',
+        )

@@ -99,6 +99,7 @@ class Mastografia(models.Model):
 
 """
 
+"""
 class Mastografia(models.Model):
     mastografiaId = models.AutoField(primary_key=True)
     imagen = models.ImageField(upload_to = 'mastografias', default = 'mastografias/static/images/no-img.jpg')
@@ -110,6 +111,18 @@ class Mastografia(models.Model):
 
     def __str__(self):
         return '{0}'.format(self.mastografiaId)
+"""
 
+class Mastografia(models.Model):
+    mastografiaId = models.AutoField(primary_key=True)
+    imagen = models.ImageField(upload_to = 'mastografias/originales', default = 'mastografias/static/images/no-img.jpg')
+    fechaEscaneo = models.DateField('FechaEscaneo')
+    check = models.BooleanField('Check',default=False)
+    anomaliasEncontradas = models.IntegerField('AnomaliasEncontradas', default=0)
+    rutaImagenResultado = models.CharField('RutaImagenResultado', max_length=750, default='NONE')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.mastografiaId)
 
 # -----------------------Mastografia--------------------------------

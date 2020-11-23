@@ -10,13 +10,18 @@ from django.core.exceptions import ObjectDoesNotExist
 #import io
 from rest_framework.parsers import JSONParser
 # Serializers
-from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer, NewPasswordSerializer, RecoverPasswordLogUpdateSerializer, MastografiaSerializer
+from BodyIxchel_API.serializers import UsuarioLoginSerializer, UsuarioSerializer, UsuarioRegistroSerializer, UsuarioModificarDatosSerializer, UsuarioInactivoSerializer, RecoverPasswordLogSerializer, NewPasswordSerializer, RecoverPasswordLogUpdateSerializer, MastografiaSerializer, MastografiaUpdateSerializer
 
 # Models
-from BodyIxchel_API.models import Usuario, RecoverPasswordLog
+from BodyIxchel_API.models import Usuario, RecoverPasswordLog, Mastografia
 #---- Email
 from BodyIxchel_API.email import SecretCode, getAlternativeText, getHTMLBase, EmailHandled
 from datetime import date
+
+#---- IA 
+from BodyIxchel_API.MastografiaAnomaliaDetector import MastografiaAnomaliaDetector
+import os
+from PIL import Image
 
 #------------ Errors Headler ---------------
 
@@ -266,13 +271,35 @@ def analyzeMastografia(request):
     if serializer.is_valid():
         mastografia = serializer.save()
         data = MastografiaSerializer(mastografia).data
-        print(data['mastografiaId'])
+        
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+        oMastografiaAnomaliaDetector = MastografiaAnomaliaDetector('{0}/AnomaliaModelDetector.xml'.format(BASE_DIR),'{0}{1}'.format(BASE_DIR,data['imagen']),'Anomalia')
+
+        oSecretCode = SecretCode()
+        oSecretCode.generate()
+
+        NAME_IMG_RESULTADO = 'MastografiaResultado_{0}_{1}_{2}.jpg'.format(data['usuario'],today, oSecretCode.getAllCadena())
+
+        oMastografiaAnomaliaDetector.saveImage(oMastografiaAnomaliaDetector.analize(),'{0}{1}'.format(MEDIA_ROOT,'/mastografias/resultados/{0}'.format(NAME_IMG_RESULTADO)))
+
+        RUTA_IMG_RESULTADO = 'mastografias/resultados/' + NAME_IMG_RESULTADO
+        oMastografiaAnomaliaDetector.saveImage(oMastografiaAnomaliaDetector.analize(),RUTA_IMG_RESULTADO)
+     
+        queryset = Mastografia.objects.get(mastografiaId=data['mastografiaId'])
+        resultSerializer = MastografiaUpdateSerializer(queryset, data={'rutaImagenResultado': RUTA_IMG_RESULTADO, 'check':'true', 'anomaliasEncontradas': 0})
 
 
+        if resultSerializer.is_valid():
+            resultMastografia = resultSerializer.save()
+            resultData = MastografiaSerializer(resultMastografia).data
 
+            return Response(resultData, status=status.HTTP_201_CREATED)
+        
+        else:
+            return ErrorMessage(ErrorArrayToString(resultSerializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
-        #DESPUES DE VALIDAR LA IA 
-        return Response(data, status=status.HTTP_201_CREATED)
     else :
         return ErrorMessage(ErrorArrayToString(serializer.errors.values()), status.HTTP_400_BAD_REQUEST)
 
