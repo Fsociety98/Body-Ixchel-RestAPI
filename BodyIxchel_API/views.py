@@ -331,3 +331,36 @@ def getMastografia(request, mastografia_id):
     else :
 
         return ErrorMessage('Mastografia no encontrada.', status.HTTP_404_NOT_FOUND)
+
+
+#/api/mastografias/list/{usuario_id}
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def getMastografias(request, usuario_id):
+
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+    queryset = Mastografia.objects.filter(check=True, usuario=usuario_id)
+
+    MastografiaList = []
+
+    for mastografia in queryset:
+        RUTA_IMG ='{0}/{1}'.format(MEDIA_ROOT, str(mastografia.imagen))  
+        STR_IMG_BASE_64 = ""
+
+        with open(RUTA_IMG, "rb") as imageFile:
+            STR_IMG_BASE_64 = base64.b64encode(imageFile.read())
+
+
+        RUTA_IMG_RESULTADO ='{0}/{1}'.format(MEDIA_ROOT, mastografia.rutaImagenResultado)
+        STR_IMG_RESULTADO_BASE_64 = ""
+
+        with open(RUTA_IMG_RESULTADO, "rb") as imageFile:
+            STR_IMG_RESULTADO_BASE_64 = base64.b64encode(imageFile.read())
+        
+
+        MastografiaList.append({'mastografiaId': mastografia.mastografiaId, 'fechaEscaneo': str(mastografia.fechaEscaneo), 'anomaliasEncontradas': mastografia.anomaliasEncontradas, 'usuario': mastografia.usuario.usuarioId, 'check': mastografia.check, 'imagen': STR_IMG_BASE_64, 'rutaImagenResultado': STR_IMG_RESULTADO_BASE_64})
+
+    return Response(MastografiaList, status=status.HTTP_200_OK)
+

@@ -23,4 +23,5 @@ urlpatterns = [
    path(r'check-password', views.checkCode, name='check_password'),
    path(r'mastografias/analyze', views.analyzeMastografia, name='mastografia_analyze'),
    path(r'mastografias/result/<int:mastografia_id>', views.getMastografia, name='mastografia_get_result'),
+   path(r'mastografias/list/<int:usuario_id>', views.getMastografias, name='mastografia_get_list'),
 ]
