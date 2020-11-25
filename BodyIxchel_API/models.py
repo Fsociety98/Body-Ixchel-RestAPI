@@ -67,3 +67,62 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         return '{0} {1}'.format(self.nombre, self.apellidoPaterno)
 
 # -----------------------Usuario--------------------------------
+
+# -----------------------Recuperar Contraseña--------------------------------
+
+class RecoverPasswordLog(models.Model):
+    recoverPasswordLogId = models.AutoField(primary_key=True)
+    codigo = models.CharField('Codigo', max_length=250)
+    fechaSolicitud = models.DateField('FechaSolicitud')
+    validado = models.BooleanField('Validado',default=False)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.codigo)
+
+
+# -----------------------Recuperar Contraseña--------------------------------
+
+# -----------------------Mastografia--------------------------------
+
+"""
+class Mastografia(models.Model):
+    mastografiaId = models.AutoField(primary_key=True)
+    rutaImagenOriginal = models.CharField('RutaImagenOriginal', max_length=750)
+    rutaImagenResultado = models.CharField('RutaImagenResultado', max_length=750)
+    fechaEscaneo = models.DateField('FechaEscaneo')
+    anomaliasEncontradas = models.IntegerField('AnomaliasEncontradas', default=0)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.mastografiaId)
+
+"""
+
+"""
+class Mastografia(models.Model):
+    mastografiaId = models.AutoField(primary_key=True)
+    imagen = models.ImageField(upload_to = 'mastografias', default = 'mastografias/static/images/no-img.jpg')
+    fechaEscaneo = models.DateField('FechaEscaneo')
+    check = models.BooleanField('Check',default=False)
+    anomaliasEncontradas = models.IntegerField('AnomaliasEncontradas', default=0)
+    idMastografiaOriginal = models.IntegerField('IdMastografiaOriginal', default=0)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.mastografiaId)
+"""
+
+class Mastografia(models.Model):
+    mastografiaId = models.AutoField(primary_key=True)
+    imagen = models.ImageField(upload_to = 'mastografias/originales', default = 'mastografias/static/images/no-img.jpg')
+    fechaEscaneo = models.DateField('FechaEscaneo')
+    check = models.BooleanField('Check',default=False)
+    anomaliasEncontradas = models.IntegerField('AnomaliasEncontradas', default=0)
+    rutaImagenResultado = models.CharField('RutaImagenResultado', max_length=750, default='NONE')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{0}'.format(self.mastografiaId)
+
+# -----------------------Mastografia--------------------------------

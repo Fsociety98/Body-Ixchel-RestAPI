@@ -1,4 +1,4 @@
-release: python manage.py makemigrations
-release: python manage.py migrate
+release: python manage.py makemigrations --no-input-
+release: python manage.py migrate --no-input-
 
-web: gunicorn BodyIxchel_Project.wsgi
+web: gunicorn BodyIxchel_Project.wsgi:application --log-file -

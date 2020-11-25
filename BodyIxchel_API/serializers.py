@@ -2,10 +2,11 @@
 from django.contrib.auth import password_validation, authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from .models import Usuario
+from .models import Usuario, RecoverPasswordLog, Mastografia
 from rest_framework.validators import UniqueValidator
 #------------------Codigo------------------------
 
+# -----------------------Usuario--------------------------------
 
 class UsuarioSerializer(serializers.ModelSerializer):
 
@@ -114,17 +115,67 @@ class UsuarioInactivoSerializer(serializers.ModelSerializer):
             'is_active',
         )
 
-class UsuarioCambioPasswordSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
-    password_old = serializers.CharField(min_length=4, max_length=64)
-    new_password = serializers.CharField(min_length=4, max_length=64)
-    new_password_confirmation = serializers.CharField(min_length=8, max_length=64)
+# -----------------------Usuario--------------------------------
 
-def validate(self, data):
-        # authenticate recibe las credenciales, si son válidas devuelve el objeto del usuario
-        usuario = authenticate(username=data['email'], password=data['password_old'])
 
-        if not usuario:
-            raise serializers.ValidationError('Las credenciales no son válidas')
+# -----------------------Recuperar Contraseña--------------------------------
 
-        return True
+class RecoverPasswordLogSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RecoverPasswordLog
+        fields = (
+            'recoverPasswordLogId',
+            'codigo',
+            'fechaSolicitud',
+            'validado',
+            'usuario',
+        )
+
+class RecoverPasswordLogUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RecoverPasswordLog
+        fields = (
+            'validado',
+            'usuario_id',
+        )
+
+
+class NewPasswordSerializer(serializers.Serializer):
+
+    password = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Contraseña no puede estar vacío.','min_length':'La Contraseña es muy corta, asegúrese que tenga al menos 8 caracteres.'})
+    password_confirmation = serializers.CharField(min_length=8, max_length=64, error_messages={'blank':'El campo Confirmar Contraseña no puede estar vacío.', 'min_length':'Asegúrese el campo Confirmar Contraseña tenga al menos 8 caracteres.'})
+
+    def validate(self, data):
+        
+        passwd = data['password']
+        passwd_conf = data['password_confirmation']
+
+        if passwd != passwd_conf:
+            raise serializers.ValidationError('Por favor, verifique las contraseñas. No coinciden.')
+
+        password_validation.validate_password(passwd)
+            
+        return data['password']
+
+# -----------------------Recuperar Contraseña--------------------------------
+
+# -----------------------Mastografia--------------------------------
+
+class MastografiaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mastografia
+        fields = '__all__'
+
+class MastografiaUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mastografia
+        fields = (
+            'rutaImagenResultado',
+            'anomaliasEncontradas',
+            'check',
+            'usuario_id',
+        )
