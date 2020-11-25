@@ -263,7 +263,7 @@ def deleteUser(request, user_id, format=None):
 # -----------Mastografia---------------
 #/api/mastografias/analyze
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def analyzeMastografia(request):
     today = date.today()
 
@@ -291,7 +291,6 @@ def analyzeMastografia(request):
         queryset = Mastografia.objects.get(mastografiaId=data['mastografiaId'])
         resultSerializer = MastografiaUpdateSerializer(queryset, data={'rutaImagenResultado': RUTA_IMG_RESULTADO, 'check':'true', 'anomaliasEncontradas': 0})
 
-
         if resultSerializer.is_valid():
             resultMastografia = resultSerializer.save()
             resultData = MastografiaSerializer(resultMastografia).data
@@ -307,7 +306,7 @@ def analyzeMastografia(request):
 
 #/api/mastografias/result/{mastografia_id}
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getMastografia(request, mastografia_id):
 
     queryset = Mastografia.objects.filter(check=True, mastografiaId=mastografia_id)
@@ -335,7 +334,7 @@ def getMastografia(request, mastografia_id):
 
 #/api/mastografias/list/{usuario_id}
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def getMastografias(request, usuario_id):
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
