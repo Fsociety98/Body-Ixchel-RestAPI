@@ -275,21 +275,21 @@ def analyzeMastografia(request):
         
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+        print(data['imagen'])
         oMastografiaAnomaliaDetector = MastografiaAnomaliaDetector('{0}/AnomaliaModelDetector.xml'.format(BASE_DIR),'{0}{1}'.format(BASE_DIR,data['imagen']),'Anomalia')
 
         oSecretCode = SecretCode()
         oSecretCode.generate()
 
-        NAME_IMG_RESULTADO = 'MastografiaResultado_{0}_{1}_{2}.jpg'.format(data['usuario'],today, oSecretCode.getAllCadena())
+        NAME_IMG_RESULTADO = 'MastografiaResultado_User_{0}_{1}_{2}.jpg'.format(data['usuario'],today, oSecretCode.getAllCadena())
 
         oMastografiaAnomaliaDetector.saveImage(oMastografiaAnomaliaDetector.analize(),'{0}{1}'.format(MEDIA_ROOT,'/mastografias/resultados/{0}'.format(NAME_IMG_RESULTADO)))
 
         RUTA_IMG_RESULTADO = 'mastografias/resultados/' + NAME_IMG_RESULTADO
-        oMastografiaAnomaliaDetector.saveImage(oMastografiaAnomaliaDetector.analize(),RUTA_IMG_RESULTADO)
+        #oMastografiaAnomaliaDetector.saveImage(oMastografiaAnomaliaDetector.analize(),RUTA_IMG_RESULTADO)
      
         queryset = Mastografia.objects.get(mastografiaId=data['mastografiaId'])
-        resultSerializer = MastografiaUpdateSerializer(queryset, data={'rutaImagenResultado': RUTA_IMG_RESULTADO, 'check':'true', 'anomaliasEncontradas': 0})
+        resultSerializer = MastografiaUpdateSerializer(queryset, data={'rutaImagenResultado': RUTA_IMG_RESULTADO, 'check':'true', 'anomaliasEncontradas': oMastografiaAnomaliaDetector.getNumberFoundOfAnomalias()})
 
         if resultSerializer.is_valid():
             resultMastografia = resultSerializer.save()
