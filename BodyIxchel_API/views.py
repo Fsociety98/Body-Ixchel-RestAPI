@@ -276,7 +276,7 @@ def analyzeMastografia(request):
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
         print(data['imagen'])
-        oMastografiaAnomaliaDetector = MastografiaAnomaliaDetector('{0}/AnomaliaModelDetector.xml'.format(BASE_DIR),'{0}{1}'.format(BASE_DIR,data['imagen']),'Anomalia')
+        oMastografiaAnomaliaDetector = MastografiaAnomaliaDetector('{0}/AnomaliaModelDetectorV2.xml'.format(BASE_DIR),'{0}{1}'.format(BASE_DIR,data['imagen']),'Anomalia')
 
         oSecretCode = SecretCode()
         oSecretCode.generate()
