@@ -36,11 +36,13 @@ from django.conf import settings
 from django.urls import include, path
 from django.conf.urls.static import static
 from django.contrib import admin
+from BodyIxchel_Project import views
 
 urlpatterns = [
     # Django Admin
     path('admin/', admin.site.urls),
 
     path('api/', include(('BodyIxchel_API.urls', 'api'), namespace='api')),
+    path('info_page/', views.getInfoPage, name='info_page'),
 
-]
+]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

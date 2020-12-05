@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Resume - Start Bootstrap Theme</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'info_page/assets/img/favicon.ico' %}" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <!--<link href="css/styles.css" rel="stylesheet" />-->
+        <link href="{% static 'info_page/css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">
+                <span class="d-block d-lg-none">BODY-IXCHEL</span>
+                <span class="d-none d-lg-block"><img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="{% static 'info_page/assets/img/BI_dark.png' %}" alt="" /></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#about">Sobre nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Teoria</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">¿Como le hicimos?</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">¿Como se usa?</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#interests">Politicas y privacidad</a></li>
+
+                </ul>
+            </div>
+        </nav>
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <!-- About-->
+            <section class="resume-section" id="about">
+                <div class="resume-section-content">
+                    <h1 class="mb-0">
+                        BODY-
+                        <span class="text-primary">IXCHEL</span>
+                    </h1>
+                    <div class="subheading mb-5">
+                        Merida Yucatán.
+                        <a href="mailto:name@email.com">soporte.bodyixchel@gmail.com</a>
+                    </div>
+                    <p class="lead mb-5">
+                        Este proyecto fue creado con la intención para crear conciencia de autoexploración para la detección oportuna de cáncer de mama y a lograr la recuperación integral de las pacientes.
+                    </p>
+                    <div class="social-icons">
+                        <a class="social-icon" href="#"><i class="fab fa-twitter"></i></a>
+                        <a class="social-icon" href="#"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+            </section>
+            <hr class="m-0" />
+            <!-- Experience-->
+            <section class="resume-section" id="experience">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Nuestra teoria</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">Cómo entender su informe de mamograma</h3>
+                            <p>
+Un médico llamado radiólogo categorizará los resultados de su mamograma mediante un sistema de número. Usted debe hablar con su médico sobre la categoría de su mamograma y lo que usted necesita hacer próximamente.                             </p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">¿Qué es una categoría de evaluación BI-RADS?</h3>
+                            <p>
+Los doctores utilizan un sistema estándar para describir los resultados y hallazgos de los mamogramas. Este sistema (llamado Breast Imaging Reporting and Data System o BI-RADS) clasifica los resultados en categorías numeradas de 0 a 6.
+
+Al clasificar los resultados en estas categorías, los médicos pueden describir lo que encuentran en un mamograma utilizando las mismas palabras y términos. Esto facilita la comunicación sobre los resultados y el seguimiento de las pruebas.                            </p>
+                        </div>
+                    
+                    </div>
+             <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <h3 class="mb-0">¿Qué significan las categorías BI-RADS?</h3>
+                           <img class="img-fluid img-profile mx-auto mb-2" src="{% static 'info_page/assets/img/birads.png' %}" alt="" />
+                        </div>
+                        
+                    </div>
+            
+                </div>
+            </section>
+            <hr class="m-0" />
+            <!-- Education-->
+            <section class="resume-section" id="education">
+                <div class="resume-section-content">
+                      <h2 class="mb-5">¿Como le hicimos?</h2>
+                    <p>Despues de mucha investigación por cuenta propia, y dias de desvelos, logramos crear una API (Interfaz de Programación de Aplicaciones) que sea capaz de entrenar una IA (Inteligencia Artificial) a base de imagenes de muchas mamografias y asi detectar anomalias en diferentes zonas. </p>
+                     <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                              <lottie-player src="https://assets7.lottiefiles.com/packages/lf20_g1pduE.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+                            </div>
+                            <div class="col-sm">
+                            <lottie-player src="https://assets9.lottiefiles.com/packages/lf20_znCQsa.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+                            </div>
+                            <div class="col-sm">
+                            <lottie-player src="https://assets9.lottiefiles.com/private_files/lf30_wsoidc.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+                            </div>
+                        </div>
+                    </div>
+                 <p>La clasificación de BI-RADS nos ayuda a comprender el nivel de error que puede obtener la AI, sin embargo, hemos implementado toda la logica detras de esto.</p>
+                </div>
+            </section>
+            <hr class="m-0" />
+            <!-- Skills-->
+            <section class="resume-section" id="skills">
+              <div class="resume-section-content">
+                    <h2 class="mb-5">¿COMO SE USA?</h2>                   
+                     <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                            <h3 class="mb-0">1. Suba su mamografia<h3>
+                             <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_2oranrew.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+
+                            </div>
+                            <div class="col-sm">
+                            <h3 class="mb-0">2. La Inteligencia Artificial buscará anomalias basado en el sistema BIRADS<h3>
+                             <lottie-player src="https://assets2.lottiefiles.com/private_files/lf30_4kmk2efh.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+
+                            </div>
+                            <div class="col-sm">
+                              <h3 class="mb-0">3. Obtenga el resultado escaneado<h3>
+                             <lottie-player src="https://assets6.lottiefiles.com/packages/lf20_LSHG4F.json" background="transparent"  speed="1"  style="width:200px; height: 200px;" loop  autoplay></lottie-player>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <hr class="m-0" />
+            <!-- Interests-->
+            <section class="resume-section" id="interests">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Politicas y privacidad</h2>
+                    <p>BODY-IXCHEL considerá su privacidad por encima de todo, es por eso que todos los datos y archivos son confindenciales, solo usted tiene el poder de darnos el permiso.</p>
+                    <p class="mb-0">Sin embargo, la IA es pobre y necesita de su ayuda. Si usted decide ayudarnos, en la sección de perfil puede darnos ese permiso.</p>
+                    <img class="img-fluid img-profile mx-auto mb-2" src="{% static 'info_page/assets/img/demo.gif' %}"  alt="" />
+                </div>
+            </section>
+            <hr class="m-0" />
+            
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'info_page/js/scripts.js' %}" ></script>
+    </body>
+</html>
